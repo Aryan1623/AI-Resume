@@ -1,0 +1,9 @@
+Django>=4.0,<5.0
+djangorestframework>=3.12,<4.0
+firebase-admin>=5.0,<6.0
+PyMuPDF>=1.18.19  # For PDF parsing
+python-docx>=0.8.11  # For DOCX parsing
+langchain>=0.0.50  # LangChain for AI-powered resume screening
+openai>=0.27.0  # OpenAI API for AI model (e.g., GPT)
+psycopg2>=2.9.3  # PostgreSQL driver (optional if using PostgreSQL)
+pymongo>=4.0.1  # MongoDB driver (optional if using MongoDB)

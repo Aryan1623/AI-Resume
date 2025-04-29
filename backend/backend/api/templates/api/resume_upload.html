@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Screener</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen">
+
+    <h2 class="text-3xl font-bold text-gray-800 mb-6">AI Resume Screener</h2>
+
+    <form id="resumeForm" enctype="multipart/form-data" onsubmit="uploadResume(event)" 
+        class="bg-white p-8 shadow-lg rounded-lg w-full max-w-lg">
+        
+        <label class="block text-gray-700 font-semibold mb-2">Upload Resume (PDF or TXT):</label>
+        <input type="file" name="resume" accept=".pdf,.txt" required 
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <br><br>
+
+        <label class="block text-gray-700 font-semibold mb-2">Enter Job Description:</label>
+        <textarea name="job_description" rows="4" required 
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        <br><br>
+
+        <button type="submit" 
+            class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300">
+            Analyze Resume
+        </button>
+
+        <div id="spinner" class="hidden mt-4 flex justify-center">
+            <div class="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+    </form>
+
+    <div id="result" class="mt-6 text-gray-800 text-center"></div>
+
+    <script>
+        function uploadResume(event) {
+            event.preventDefault();
+            let formData = new FormData(document.getElementById("resumeForm"));
+            let resultDiv = document.getElementById("result");
+            let spinner = document.getElementById("spinner");
+
+            resultDiv.innerHTML = "";
+            spinner.classList.remove("hidden");
+
+            fetch("{% url 'upload_resume' %}", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                spinner.classList.add("hidden");
+                if (data.error) {
+                    resultDiv.innerHTML = `<p class="text-red-600 font-semibold">Error: ${data.error}</p>`;
+                } else {
+                    resultDiv.innerHTML = `<p class="text-gray-800 font-semibold"><strong>Feedback:</strong> ${data.feedback}</p>`;
+                }
+            })
+            .catch(error => {
+                spinner.classList.add("hidden");
+                console.error("Error:", error);
+                resultDiv.innerHTML = `<p class="text-red-600 font-semibold">Something went wrong. Please try again.</p>`;
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume List</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Uploaded Resumes</h1>
+    <table id="resumeTable">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <script>
+        async function fetchResumes() {
+            const response = await fetch('/api/resume-list/');
+            const resumes = await response.json();
+
+            const tableBody = document.getElementById('resumeTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '';
+
+            resumes.forEach(resume => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).textContent = resume.user_id;
+                row.insertCell(1).textContent = resume.name;
+                row.insertCell(2).textContent = resume.email;
+                row.insertCell(3).textContent = resume.score;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchResumes);
+    </script>
+</body>
+</html>

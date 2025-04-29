@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AiRes - Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            30% { transform: translateY(250px); }
+            50% { transform: translateY(200px); }
+            70% { transform: translateY(250px); }
+            100% { transform: translateY(0); }
+        }
+
+        @keyframes changeBackground {
+            0% { background-color: #f3f4f6; }
+            100% { background-color: #3498db; }
+        }
+
+        .ball {
+            width: 50px;
+            height: 50px;
+            background-color: #3498db;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 65%;
+            transform: translateX(-50%);
+            animation: bounce 2s ease-in-out 1;
+        }
+
+        /* Sliding Animation */
+        .hidden-section {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .visible-section {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-gray-100" id="homepage">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md p-4 flex justify-between items-center fixed top-0 left-0 w-full z-50">
+        <div class="text-xl font-bold text-blue-600">AiRes</div>
+        <a href="/login" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Login</a>
+    </nav>
+    
+    <!-- Home Section -->
+    <section class="flex flex-col items-center justify-center h-screen pt-16" id="home">
+        <div class="ball" id="ball"></div>
+        <h1 class="text-4xl font-bold text-gray-800">Welcome to AiRes</h1>
+        <p class="text-lg text-gray-600 mt-2">AI-powered resume screening made easy.</p>
+    </section>
+    
+    <!-- Resume Analyser Section -->
+    <section class="hidden-section flex flex-col md:flex-row items-center justify-center gap-8 p-12 bg-white" id="resume-analyser">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-800">Try Our Resume Analyser</h2>
+            <p class="text-lg text-gray-600 mt-2">Upload your resume and let our AI do the rest.</p>
+            <button class="mt-4 bg-blue-600 text-white px-6 py-3 rounded-lg">Upload Resume</button>
+        </div>
+        <img src="https://via.placeholder.com/400" alt="Resume Analysis" class="w-80 h-auto">
+    </section>
+    
+    <!-- Contact Us Section -->
+    <section class="hidden-section p-12 bg-gray-200 text-center" id="contact-us">
+        <h2 class="text-3xl font-bold text-gray-800">Contact Us</h2>
+        <p class="text-lg text-gray-600 mt-2">We would love to hear from you!</p>
+        <div class="mt-4 space-y-2">
+            <p><strong>Phone:</strong> +1 234 567 890</p>
+            <p><strong>Email:</strong> contact@aires.com</p>
+            <p><strong>LinkedIn:</strong> <a href="#" class="text-blue-600">linkedin.com/company/aires</a></p>
+            <p><strong>GitHub:</strong> <a href="#" class="text-blue-600">github.com/aires</a></p>
+        </div>
+    </section>
+
+    <script>
+        // Wait for the bounce animation to finish before changing background color
+        document.getElementById('ball').addEventListener('animationend', function() {
+            document.body.style.animation = "changeBackground 1s forwards";
+        });
+
+        // Detect when sections come into view and apply the slide-up effect
+        document.addEventListener("DOMContentLoaded", function () {
+            const hiddenSections = document.querySelectorAll(".hidden-section");
+
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("visible-section");
+                        observer.unobserve(entry.target); // Stop observing once it becomes visible
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            hiddenSections.forEach(section => observer.observe(section));
+        });
+    </script>
+</body>
+</html>
